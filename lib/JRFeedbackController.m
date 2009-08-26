@@ -84,7 +84,12 @@ NSString *JRFeedbackType[JRFeedbackController_SectionCount] = {
     [segmentedControl setSegmentStyle:NSSegmentStyleTexturedSquare];
     [segmentedControl setSegmentStyle:NSSegmentStyleTexturedSquare];
 #endif
-    NSString* fmt = NSLocalizedStringFromTable(@"Title", @"JRFeedbackProvider", nil);
+
+	// nothing to send yet
+	[self setReportIsAvailableToSend:NO];
+	[textView setDelegate:self];
+
+	NSString* fmt = NSLocalizedStringFromTable(@"Title", @"JRFeedbackProvider", nil);
     NSString* title = [NSString stringWithFormat:fmt, [[[NSBundle bundleForClass:[self class]] infoDictionary] objectForKey:(NSString*)kCFBundleNameKey]];
     [[self window] setTitle:title];
     
@@ -131,6 +136,10 @@ NSString *JRFeedbackType[JRFeedbackController_SectionCount] = {
 }
 
 - (IBAction)switchSectionAction:(NSSegmentedControl*)sender {
+	
+	// nothing to send yet
+	[self setReportIsAvailableToSend:NO];
+	
     [sectionStrings[currentSection] release];
     sectionStrings[currentSection] = [[textView textStorage] copy];
     
@@ -308,5 +317,37 @@ NSString *JRFeedbackType[JRFeedbackController_SectionCount] = {
     [[self window] center];
     [super showWindow:sender];
 }
+
+
+// OJW:Change NSTextView delegate to prevent send until the user has actually typed something
+
+// accessors to support KVO
+- (BOOL)reportIsAvailableToSend;
+{
+	return reportIsAvailableToSend;
+}
+
+- (void)setReportIsAvailableToSend:(BOOL)inReportIsAvailableToSend;
+{
+	if ([self reportIsAvailableToSend] == inReportIsAvailableToSend)
+		return;
+
+//	[self willChangeValueForKey:<#(NSString *)key#>
+	reportIsAvailableToSend = inReportIsAvailableToSend;
+}
+
+
+// NSTextView delegate
+- (BOOL)textView:(NSTextView *)aTextView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
+{
+	NSLog(@"%s", __FUNCTION__);
+	[self setReportIsAvailableToSend:YES];
+	return YES;
+}
+
+// OJW:End Change
+
+
+
 
 @end
