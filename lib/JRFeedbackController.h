@@ -57,4 +57,9 @@ typedef enum {
 
 - (void)showWindow:(id)sender;
 
+// flag to tell Send button when to activate
+// no until user has typed something, yes afterward
+- (BOOL)reportIsAvailableToSend;
+- (void)setReportIsAvailableToSend:(BOOL)inReportIsAvailableToSend;
+
 @end
