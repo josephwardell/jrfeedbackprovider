@@ -319,8 +319,6 @@ NSString *JRFeedbackType[JRFeedbackController_SectionCount] = {
 }
 
 
-// OJW:Change NSTextView delegate to prevent send until the user has actually typed something
-
 // accessors to support KVO
 - (BOOL)reportIsAvailableToSend;
 {
@@ -332,7 +330,6 @@ NSString *JRFeedbackType[JRFeedbackController_SectionCount] = {
 	if ([self reportIsAvailableToSend] == inReportIsAvailableToSend)
 		return;
 
-//	[self willChangeValueForKey:<#(NSString *)key#>
 	reportIsAvailableToSend = inReportIsAvailableToSend;
 }
 
@@ -340,12 +337,10 @@ NSString *JRFeedbackType[JRFeedbackController_SectionCount] = {
 // NSTextView delegate
 - (BOOL)textView:(NSTextView *)aTextView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
 {
-	NSLog(@"%s", __FUNCTION__);
 	[self setReportIsAvailableToSend:YES];
 	return YES;
 }
 
-// OJW:End Change
 
 
 
